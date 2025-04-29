@@ -8,7 +8,7 @@ However, delegating compute to a diverse group of suppliers means that we are im
 
 Therefore we have invested significantly in *detecting* when operators may not be using the requested model to perform inference.
 
-While our efforts in these areas are ongoing, we are keen to share our progress and findings with the community.
+While our efforts in these areas are ongoing, we are keen to share the results of some of our initial experiments.
 
 ### Why It's Hard
 
