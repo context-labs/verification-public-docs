@@ -236,11 +236,14 @@ We plan to continue exploring the Response Plausibility Test to improve its powe
 
 We theorize that the Response Plausibility Test is detecting a genuine signal that the token probability distribution used to validate the response is slightly different from the original distributions used to generate the response.  In other words, we think that the test is impacted by deep non-determinism and is working "too well".
 
-It may be possible to revise our test to make it robust to the small variations in the token probability distributions - perhaps by performing multiple pre-fills to gather an empirical estimate of the noise in the distributions.  The challenge will be in balancing increased robustness with loss of power.
+It may be possible to revise our test to make it robust to the small variations in the token probability distributions - perhaps by performing multiple pre-fills to gather an empirical estimate of the noise, bootstrapping or averaging.  The challenge will be in balancing increased robustness with loss of power.
 
 We may also bin smaller token probabilities into a single, larger "low probability token" bin to reduce the impact of non-determinism on the test.
 
 Some other possible directions include:
-1. Applying the [Berkowitz Test](https://www.risk-research.de/fileadmin/userdaten/docs/Fachartikel/2009_HamerlePlank_ANoteOnTheBerkowitzTest__7_.pdf) instead of Fisher's Method. 
+1. Applying the [Berkowitz Test](https://www.risk-research.de/fileadmin/userdaten/docs/Fachartikel/2009_HamerlePlank_ANoteOnTheBerkowitzTest__7_.pdf) instead of Fisher's Method.
+2. Investigating methods to partially address non-determinism in the token probability distributions
+3. Perhaps there is some way to capture some "signal" of the "delta" of the non-determinism that could be applied as a correction to its replication on pre-fill.
+
 
 
