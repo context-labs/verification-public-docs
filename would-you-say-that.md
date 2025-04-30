@@ -44,6 +44,8 @@ Another research direction is to use purpose-trained models to distinguish betwe
 
 [Watermarking approaches](https://arxiv.org/pdf/2312.04469) are another direction, but they are also not well-suited for Inference.net because they require custom fine-tuning or modification of model architecture or weights - again, not viable for Inference.net.
 
+[TopLOC](https://arxiv.org/abs/2501.16007) captures a prompt and model specific fingerprint of the last layer hidden states of the model during inference.  This fingerprint is constructed to be robust to small variations due to inference non-determinism.  The fingerprint can be validated on pre-fill.  The authors report very low False Positive and False Negative rates.  However, as the authors acknowledge, TopLOC can be circumvented by pre-filling an arbitrary prompt and response and reporting the fingerprint of the pre-fill.
+
 ## Experimental Methods and Results
 
 ### The Response Plausibility Test
@@ -106,7 +108,7 @@ Here's the key: It turns out that any continuous distribution can be transformed
 
 To apply the PIT, we'll replace the token probability with the sum of all probabilities *less than* the probability of the selected token.  This is the `tail mass`, which is a way of computing the CDF for a discrete distribution.
 
-![alt text](images/image-6.png)
+![alt text](images/image-12.png)
 
 Next, we'll add a random fraction of the selected token's probability to the tail mass.  Thus, our transformed token probability is the sum of both the tail mass and the hatched red area, which is a random correction.  
 
@@ -119,7 +121,7 @@ By applying this transformation to every token in the sequence, we can treat the
 
 Now that we have a sequence of values which are presumably all drawn from a standard uniform distribution, we can apply a statistical test to determine if this transformed series of values is consistent with sampling from a standard uniform distribution.
 
-![alt text](images/image-5.png)
+![alt text](images/image-11.png)
 
 In our case, we used Fisher's Method to compute a p-value for each sequence with a significance level of 0.01.
 
@@ -227,3 +229,18 @@ Finally, we computed a cosine similarity score between the embedding of the orig
 We found that cosine embedding (even with the best performing model) was little better than chance for both distinguishing between `3.1-8b-instruct` and `3.2-3b-instruct` and, somewhat worse than chance for detecting different quantizations of `3.1-8b-instruct`.
 
 Overall, the results indicate that cosine embedding is not a reliable verification method.
+
+## Future Work
+
+We plan to continue exploring the Response Plausibility Test to improve its power and reliability as well as explore other approaches.
+
+We theorize that the Response Plausibility Test is detecting a genuine signal that the token probability distribution used to validate the response is slightly different from the original distributions used to generate the response.  In other words, we think that the test is impacted by deep non-determinism and is working "too well".
+
+It may be possible to revise our test to make it robust to the small variations in the token probability distributions - perhaps by performing multiple pre-fills to gather an empirical estimate of the noise in the distributions.  The challenge will be in balancing increased robustness with loss of power.
+
+We may also bin smaller token probabilities into a single, larger "low probability token" bin to reduce the impact of non-determinism on the test.
+
+Some other possible directions include:
+1. Applying the [Berkowitz Test](https://www.risk-research.de/fileadmin/userdaten/docs/Fachartikel/2009_HamerlePlank_ANoteOnTheBerkowitzTest__7_.pdf) instead of Fisher's Method. 
+
+
