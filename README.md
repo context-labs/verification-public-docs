@@ -236,6 +236,8 @@ We plan to continue exploring the Response Plausibility Test to improve its powe
 
 We theorize that the Response Plausibility Test is detecting a genuine signal that the token probability distribution used to validate the response is slightly different from the original distributions used to generate the response.  In other words, we think that the test is impacted by deep non-determinism and is working "too well".
 
+We have also ignored independence assumptions due to our observations of real token probability selection:  We find that the selection of an unlikely token does not cause the selection of additional unlikely tokens immediately afterwards, because the probability distribution of the next token "takes into account" the selection of the unlikely token.  We may have been unjustified in this judgment and should try testing and correcting for auto-correlation.
+
 It may be possible to revise our test to make it robust to the small variations in the token probability distributions - perhaps by performing multiple pre-fills to gather an empirical estimate of the noise, bootstrapping or averaging.  The challenge will be in balancing increased robustness with loss of power.
 
 We may also bin smaller token probabilities into a single, larger "low probability token" bin to reduce the impact of non-determinism on the test.
